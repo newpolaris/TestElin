@@ -9,6 +9,15 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class ElinRenderer implements GLSurfaceView.Renderer {
     private Triangle triangle;
+    private float mAngle;
+
+    public float getAngle() {
+        return mAngle;
+    }
+
+    public void setAngle(float angle) {
+        mAngle = angle;
+    }
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] mMVPMatrix = new float[16];
@@ -43,7 +52,12 @@ public class ElinRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        float[] scratch = new float[16];
+        float[] mRotationMatrix = new float[16];
 
-        triangle.draw(mMVPMatrix);
+        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0, 0, -1.0f);
+
+        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
+        triangle.draw(scratch);
     }
 }

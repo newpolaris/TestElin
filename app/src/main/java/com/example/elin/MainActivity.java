@@ -1,4 +1,4 @@
-package com.example.gles;
+package com.example.elin;
 
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        glView = (GLView) findViewById(R.id.opengl);
+        glView = (ElinSurfaceView) findViewById(R.id.opengl);
     }
 
     @Override

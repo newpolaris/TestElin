@@ -1,4 +1,4 @@
-package com.example.gles;
+package com.example.elin;
 
 import android.content.Context;
 

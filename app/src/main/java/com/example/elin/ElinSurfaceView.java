@@ -27,7 +27,6 @@ public class ElinSurfaceView extends GLSurfaceView {
         setPreserveEGLContextOnPause(true);
         mRenderer = new ElinRenderer();
         setRenderer(mRenderer);
-        // setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 
     @Override

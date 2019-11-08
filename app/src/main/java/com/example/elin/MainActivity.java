@@ -1,38 +1,37 @@
 package com.example.elin;
 
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
-    private GLSurfaceView glView;
+public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+    private SurfaceView surfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        glView = (ElinSurfaceView) findViewById(R.id.opengl);
+        surfaceView = findViewById(R.id.surfaceview);
+        surfaceView.getHolder().addCallback(this);
+        surfaceView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(MainActivity.this,
+                        "This demo combines Java UI and native EGL + OpenGL renderer",
+                        Toast.LENGTH_LONG);
+                toast.show();
+            }});
     }
-    /* A native method that is implemented by the
-     * 'hello-jni' native library, which is packaged
-     * with this application.
-     */
-    public native String  stringFromJNI();
 
-    /* This is another native method declaration that is *not*
-     * implemented by 'hello-jni'. This is simply to show that
-     * you can declare as many native methods in your Java code
-     * as you want, their implementation is searched in the
-     * currently loaded native libraries only the first time
-     * you call them.
-     *
-     * Trying to call this function will result in a
-     * java.lang.UnsatisfiedLinkError exception !
-     */
-    public native String  unimplementedStringFromJNI();
+    public native void nativeOnStart();
+    public native void nativeOnResume();
+    public native void nativeOnPause();
+    public native void nativeOnStop();
+    public native void nativeSetSurface(Surface surface);
 
     /* this is used to load the 'hello-jni' library on application
      * startup. The library has already been unpacked into
@@ -44,16 +43,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        nativeOnStart();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        glView.onPause();
-
-        Log.d("LOG_CAT", stringFromJNI() );
+        nativeOnPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        glView.onResume();
+        nativeOnResume();
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        nativeSetSurface(holder.getSurface());
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        nativeSetSurface(null);
     }
 }
